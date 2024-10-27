@@ -1,8 +1,8 @@
-import * as React from "react"
-import { Slot } from "@radix-ui/react-slot"
-import { cva, type VariantProps } from "class-variance-authority"
+import * as React from "react";
+import { Slot } from "@radix-ui/react-slot";
+import { cva, type VariantProps } from "class-variance-authority";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
@@ -32,26 +32,75 @@ const buttonVariants = cva(
       size: "default",
     },
   }
-)
+);
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
-  asChild?: boolean
+  asChild?: boolean;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button"
+    const Comp = asChild ? Slot : "button";
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
         {...props}
       />
-    )
+    );
   }
-)
-Button.displayName = "Button"
+);
+Button.displayName = "Button";
 
-export { Button, buttonVariants }
+interface ButtonGroupProps {
+  className?: string;
+  orientation?: "horizontal" | "vertical";
+  children: React.ReactElement<ButtonProps>[];
+}
+
+export const ButtonGroup = ({
+  className,
+  orientation = "horizontal",
+  children,
+}: ButtonGroupProps) => {
+  const totalButtons = React.Children.count(children);
+  const isHorizontal = orientation === "horizontal";
+  const isVertical = orientation === "vertical";
+
+  return (
+    <div
+      className={cn(
+        "flex",
+        {
+          "flex-col": isVertical,
+          "w-fit": isVertical,
+        },
+        className
+      )}
+    >
+      {React.Children.map(children, (child, index) => {
+        const isFirst = index === 0;
+        const isLast = index === totalButtons - 1;
+
+        return React.cloneElement(child, {
+          className: cn(
+            {
+              "rounded-l-none": isHorizontal && !isFirst,
+              "rounded-r-none": isHorizontal && !isLast,
+              "border-l-0": isHorizontal && !isFirst,
+
+              "rounded-t-none": isVertical && !isFirst,
+              "rounded-b-none": isVertical && !isLast,
+              "border-t-0": isVertical && !isFirst,
+            },
+            child.props.className
+          ),
+        });
+      })}
+    </div>
+  );
+};
+
+export { Button, buttonVariants };
