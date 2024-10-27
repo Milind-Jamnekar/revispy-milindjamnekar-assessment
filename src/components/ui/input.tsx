@@ -33,12 +33,16 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             type="button"
             className="absolute right-3 top-1/2 -translate-y-1/2"
             onClick={togglePasswordVisibility}
+            aria-label={showPassword ? "Hide password" : "Show password"}
           >
             {showPassword ? (
-              <Eye className="h-4 w-4 text-gray-500" />
+              <Eye className="h-6 w-6 text-gray-500" />
             ) : (
-              <EyeClosedIcon className="h-4 w-4 text-gray-500" />
+              <EyeClosedIcon className="h-6 w-6 text-gray-500" />
             )}
+            <span className="sr-only">
+              {showPassword ? "Hide password button" : "Show password button"}
+            </span>
           </button>
         )}
       </div>

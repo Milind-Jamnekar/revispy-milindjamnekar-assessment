@@ -58,10 +58,12 @@ export default function Navbar() {
           <div className="space-x-3">
             <Button variant="ghost" size="icon" className="">
               <Search className="h-10 w-10" />
+              <span className="sr-only">Search button</span>
             </Button>
 
             <Button variant="ghost" size="icon">
               <ShoppingCartIcon className="size-5" />
+              <span className="sr-only">Cart button</span>
             </Button>
 
             <MobileDrawer />

@@ -1,6 +1,11 @@
 "use client";
+import { interestFormShema } from "@/types/form-schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { Card, CardContent, CardFooter } from "./ui/card";
+import { Checkbox } from "./ui/checkbox";
 import {
   Form,
   FormControl,
@@ -10,10 +15,6 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { interestFormShema } from "@/types/form-schemas";
-import { z } from "zod";
-import { Separator } from "./ui/separator";
 import {
   Pagination,
   PaginationContent,
@@ -23,8 +24,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "./ui/pagination";
-import { Checkbox } from "./ui/checkbox";
-import { usePathname, useSearchParams } from "next/navigation";
+import { Separator } from "./ui/separator";
 
 export default function InterestsCheckbox({
   interests,
@@ -60,10 +60,10 @@ export default function InterestsCheckbox({
   const composePageURL = (pageNumber: number) => {
     const params = new URLSearchParams(searchParams);
     params.set("page", `${pageNumber}`);
-
     return `${pathname}?${params.toString()}`;
   };
 
+  // Elipsis button (dotted) will help to jump on middle section of number
   const renderEllipsis = (min: number, max: number) => (
     <PaginationItem>
       <PaginationEllipsis
@@ -113,10 +113,11 @@ export default function InterestsCheckbox({
                         return (
                           <FormItem
                             key={interest.id}
-                            className="flex flex-row items-center space-x-2 space-y-0 "
+                            className="flex flex-row items-center space-x-2 space-y-0"
                           >
                             <FormControl>
                               <Checkbox
+                                aria-label={interest.label}
                                 checked={field.value?.includes(interest.id)}
                                 onCheckedChange={(checked) => {
                                   const newValue = checked
@@ -130,7 +131,10 @@ export default function InterestsCheckbox({
                                 }}
                               />
                             </FormControl>
-                            <FormLabel className="font-normal ">
+                            <FormLabel
+                              aria-labelledby={interest.label}
+                              className="font-normal"
+                            >
                               {interest.label}
                             </FormLabel>
                           </FormItem>
