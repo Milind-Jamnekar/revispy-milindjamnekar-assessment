@@ -7,8 +7,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { getInterests } from "./_query";
+import { auth } from "../../../../auth";
+import { redirect } from "next/navigation";
 
 export default async function InterestPage() {
+  const session = await auth();
+  if (!session) {
+    redirect("/login");
+  }
   const interests = await getInterests();
 
   return (

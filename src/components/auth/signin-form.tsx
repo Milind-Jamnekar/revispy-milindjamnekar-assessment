@@ -16,8 +16,16 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Separator } from "../ui/separator";
 import { siginFormSchema } from "@/types/form-schemas";
+import { useActionState, useRef } from "react";
+import { authenticate } from "@/lib/action";
 
 export default function SigninForm() {
+  const [errorMessage, formAction, isPending] = useActionState(
+    authenticate,
+    undefined
+  );
+
+  const formRef = useRef<HTMLFormElement>(null);
   const form = useForm<z.infer<typeof siginFormSchema>>({
     resolver: zodResolver(siginFormSchema),
     defaultValues: {
@@ -25,14 +33,14 @@ export default function SigninForm() {
       password: undefined,
     },
   });
-  function onSubmit(values: z.infer<typeof siginFormSchema>) {
-    console.log(values);
-  }
+
   return (
     <Form {...form}>
       <form
+        ref={formRef}
+        action={formAction}
         noValidate
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(() => formRef.current?.submit())}
         className="space-y-5"
       >
         <FormField
@@ -64,7 +72,12 @@ export default function SigninForm() {
             </FormItem>
           )}
         />
-        <Button size="lg" type="submit" className="w-full uppercase">
+        <Button
+          disabled={isPending}
+          size="lg"
+          type="submit"
+          className="w-full uppercase"
+        >
           Create account
         </Button>
       </form>

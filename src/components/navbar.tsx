@@ -1,25 +1,19 @@
-"use client";
+import { logout } from "@/lib/action";
 import {
   ChevronLeft,
   ChevronRight,
-  MenuIcon,
+  LogOut,
   Search,
   ShoppingCartIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { Button, buttonVariants } from "./ui/button";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "./ui/drawer";
-import { useIsMobile } from "@/hooks/user-mobile";
+import { auth } from "../../auth";
+import { MobileDrawer } from "./mobile-drawer";
+import { Button } from "./ui/button";
 
-export default function Navbar() {
+export default async function Navbar() {
+  const session = await auth();
+
   return (
     <>
       <header className="container flex flex-col py-4">
@@ -66,6 +60,14 @@ export default function Navbar() {
               <span className="sr-only">Cart button</span>
             </Button>
 
+            {session && (
+              <form action={logout}>
+                <Button variant="destructive" size="icon">
+                  <LogOut className="w-6" />
+                </Button>
+              </form>
+            )}
+
             <MobileDrawer />
           </div>
         </div>
@@ -89,58 +91,4 @@ export default function Navbar() {
       </article>
     </>
   );
-}
-
-export function MobileDrawer() {
-  const isMobile = useIsMobile();
-
-  if (isMobile) {
-    return (
-      <Drawer>
-        <DrawerTrigger asChild>
-          <Button variant="outline" size="icon">
-            <MenuIcon className="size-6" />
-          </Button>
-        </DrawerTrigger>
-        <DrawerContent>
-          <DrawerHeader className="text-left px-5">
-            <DrawerTitle className="sr-only">Menu</DrawerTitle>
-          </DrawerHeader>
-          <ul className="flex flex-col place-content-center gap-3">
-            <li>
-              <Link className={buttonVariants({ variant: "ghost" })} href="#">
-                Categories
-              </Link>
-            </li>
-            <li>
-              <Link className={buttonVariants({ variant: "ghost" })} href="#">
-                Sales
-              </Link>
-            </li>
-            <li>
-              <Link className={buttonVariants({ variant: "ghost" })} href="#">
-                Clearance
-              </Link>
-            </li>
-            <li>
-              <Link className={buttonVariants({ variant: "ghost" })} href="#">
-                New stock
-              </Link>
-            </li>
-            <li>
-              <Link className={buttonVariants({ variant: "ghost" })} href="#">
-                Trending
-              </Link>
-            </li>
-          </ul>
-          <DrawerFooter className="pt-2">
-            {/* <LoginOrLogoutButton /> */}
-            <DrawerClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DrawerClose>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
-    );
-  }
 }

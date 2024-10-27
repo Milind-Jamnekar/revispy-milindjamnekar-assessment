@@ -18,8 +18,14 @@ const passwordSchema = z
   });
 
 const signupFormSchema = z.object({
-  name: z.string().min(3),
-  email: z.string().email().min(1).max(255),
+  name: z
+    .string()
+    .min(3, { message: "Name should be containe atleast 3 characters" }),
+  email: z
+    .string()
+    .min(1, { message: "Email connot be empty" })
+    .max(255)
+    .email(),
   password: passwordSchema,
 });
 
