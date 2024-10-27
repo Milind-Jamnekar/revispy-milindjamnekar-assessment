@@ -20,7 +20,10 @@ import { useActionState, useRef } from "react";
 import { authenticate } from "@/lib/action";
 
 export default function SigninForm() {
-  const [errorMessage, formAction, isPending] = useActionState(
+  // eslint rules compulsory want to removed unused state var but if i removed
+  // isPending become function instead of boolean
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [state, formAction, isPending] = useActionState(
     authenticate,
     undefined
   );
@@ -30,7 +33,7 @@ export default function SigninForm() {
     resolver: zodResolver(siginFormSchema),
     defaultValues: {
       email: "",
-      password: undefined,
+      password: "",
     },
   });
 
@@ -65,7 +68,7 @@ export default function SigninForm() {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input type="password" {...field} placeholder={"password"} />
+                <Input type="password" placeholder={"password"} {...field} />
               </FormControl>
               <FormDescription></FormDescription>
               <FormMessage />

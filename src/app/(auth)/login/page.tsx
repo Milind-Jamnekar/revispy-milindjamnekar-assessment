@@ -19,7 +19,7 @@ export default async function LoginPage() {
       <Card>
         <CardHeader className="text-center space-y-6">
           <CardTitle className="text-3xl">Login</CardTitle>
-          <CardDescription>
+          <CardDescription className="flex flex-col">
             <span className="text-lg text-slate-700">
               Welcome back to ECOMMERCE
             </span>

@@ -1,4 +1,3 @@
-import SignupForm from "@/components/auth/signup-form";
 import { Button, ButtonGroup } from "@/components/ui/button";
 import {
   Card,
@@ -9,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 
-export default function AuthPage() {
+export default function Page() {
   return (
     <section className="max-w-md mx-auto mt-10">
       <Card>
